@@ -14,7 +14,15 @@ from pathlib import Path
 # PATHS
 # ─────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent
-DATASET_DIR = BASE_DIR.parent / "model" / "dataset"
+
+# Support both local development and Streamlit Cloud deployment
+if (BASE_DIR / "dataset").exists():
+    # If dataset is inside ui_model (for GitHub / Streamlit Cloud)
+    DATASET_DIR = BASE_DIR / "dataset"
+else:
+    # If running locally in the original structure
+    DATASET_DIR = BASE_DIR.parent / "model" / "dataset"
+    
 DATA_DIR = DATASET_DIR / "data"
 LABEL_FILE = DATASET_DIR / "dyslexia_class_label.csv"
 
