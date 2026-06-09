@@ -1,0 +1,124 @@
+#        → ImageFolder dataset  (for CNN / ResNet / EfficientNet / GAN)
+# ── 1. IMAGE DATASET (CNN / ResNet / EfficientNet / GAN) ─────────
+print("  get_image_loaders()      → ImageFolder + KFold splits   (CNN / ResNet / GAN)")
+#  MODEL: ResNet18  (duplicate this section for other CNN models)
+fold_results_resnet = []
+    model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+    for epoch in tqdm(range(EPOCHS), desc=f"ResNet18 Fold {fold+1}", leave=False):
+            torch.save(model.state_dict(), f"resnet_weights_fold_{fold}.pth")
+    fold_results_resnet.append(best_fold_acc)
+avg_res = np.mean(fold_results_resnet)
+std_res = np.std(fold_results_resnet)
+print(f"  ResNet18 5-FOLD VERDICT: {avg_res:.4f}  (± {std_res:.4f})")
+effnet_train_tf = T.Compose([
+effnet_val_tf = T.Compose([
+effnet_train_ds, kfold_splits_eff, _ = get_image_loaders(
+    variant="scanpath", transform=effnet_train_tf,
+effnet_val_ds, _, _ = get_image_loaders(
+    variant="scanpath", transform=effnet_val_tf,
+def get_effnet_loaders(fold_idx):
+        DataLoader(effnet_train_ds, batch_size=BATCH_SIZE, sampler=SubsetRandomSampler(train_ids)),
+        DataLoader(effnet_val_ds,   batch_size=BATCH_SIZE, sampler=SubsetRandomSampler(val_ids)),
+fold_results_effnet = []
+    train_loader, val_loader, val_ids = get_effnet_loaders(fold)
+    model = tv_models.efficientnet_b0(weights=tv_models.EfficientNet_B0_Weights.DEFAULT)
+        torch.save(model.state_dict(), f"effnet_weights_fold_{fold}.pth")
+    fold_results_effnet.append(best_fold_acc)
+infer_effnet = tv_models.efficientnet_b0(weights=None)
+in_features = infer_effnet.classifier[1].in_features
+infer_effnet.classifier = nn.Sequential(
+NAMA_FILE_WEIGHTS = "effnet_weights_fold_0.pth"
+infer_effnet.load_state_dict(torch.load(NAMA_FILE_WEIGHTS, map_location=device))
+infer_effnet = infer_effnet.to(device)
+infer_effnet.eval()
+avg_eff = np.mean(fold_results_effnet)
+std_eff = np.std(fold_results_effnet)
+# ── Side-by-side comparison with ResNet18 ────────────────────────
+print(f"  {'ResNet18':<18} {np.mean(fold_results_resnet):>10.4f} {np.std(fold_results_resnet):>8.4f}")
+print(f"  Fold  {'ResNet18':>10} {'EffNet-B0':>12}")
+for i, (r, e) in enumerate(zip(fold_results_resnet, fold_results_effnet), 1):
+    winner = " ← ResNet" if r > e else (" ← EffNet" if e > r else "")
+    'ResNet18'       : fold_results_resnet,
+    'EfficientNet-B0': fold_results_effnet,
+header = f"  {'Fold':>4}  {'ResNet18':>10} {'EffNet-B0':>11} {'GCN':>8}"
+for i, (r, e, g) in enumerate(zip(fold_results_resnet, fold_results_effnet, fold_results_gnn), 1):
+        " ← ResNet" if r == best and r > e and r > g else
+        " ← EffNet" if e == best and e > r and e > g else
+# ── Hyperparameters (reuse same config as ResNet / EfficientNet) ──
+# Reuse the shared image loaders (same KFold splits as ResNet)
+#  Models: ResNet18 + GCN
+ABSTENTION_THRESHOLD = 0.5   # ResNet prob below this → defer to GCN
+    # 1. Load ResNet18 (matches training architecture)
+    resnet = models.resnet18(weights=None)
+    for param in resnet.parameters():
+    num_ftrs = resnet.fc.in_features
+    resnet.fc = nn.Sequential(nn.Dropout(0.5), nn.Linear(num_ftrs, 2))
+    resnet.load_state_dict(torch.load(f"resnet_weights_fold_{fold}.pth"))
+    resnet = resnet.to(device).eval()
+            # ResNet18 forward pass
+            res_logits = resnet(img_tensor.unsqueeze(0).to(device))
+            # ResNet uncertain → defer entirely to GCN
+    print(f"  Subj ID | True | ResNet (%) | GCN (%) | Ens (%) | Abstain | Pred | Match")
+    # Buang sisa NaN (kedipan panjang) agar tidak merusak graf GCN & gambar ResNet
+RESNET_WEIGHTS_PATTERN = "resnet_weights_fold_{fold}.pth"
+#  CELL 3 — BUILD RESNET INPUT + GCN GRAPH
+#    mira_img_tensor  : (1, 3, 224, 224)  – for ResNet
+# ── 1. SCANPATH IMAGE → ResNet tensor ────────────────────────────
+    # [PERBAIKAN 1]: Hapus SEMUA margin agar gambar murni hitam untuk ResNet
+# ── Clean fix_df before passing to ResNet ──────────────────────────
+# ResNet menggunakan fix_df_clean
+print(f"ResNet input tensor : {tuple(mira_img_tensor.shape)}")
+#  Requires: infer_resnet, infer_gcn, INFER_W_RES, INFER_W_GCN,
+infer_resnet.eval()
+    # ResNet
+    res_logits = infer_resnet(img_input)
+print(f"  ResNet probability  : {res_prob*100:6.2f}%")
+# ── Optional: visualise the scanpath that was fed to ResNet ───────
+    f"ResNet {res_prob*100:.1f}%  |  GCN {gcn_prob*100:.1f}%  |  "
+print(f"{'SUBJECT ID':<18} | {'RESNET (%)':<12} | {'GCN (%)':<10} | {'ENSEMBLE (%)':<14} | {'PREDICTION'}")
+infer_resnet.eval()
+        # 1. Clean Fixation Data (untuk ResNet)
+            res_logits = infer_resnet(img_tensor)
+            # Matikan GCN, kita pakai ResNet saja
+            'ResNet_Prob': res_prob,
+print(f"{'SUBJECT ID':<18} | {'RESNET (%)':<12} | {'GCN (%)':<10} | {'ENSEMBLE (%)':<14} | {'PREDICTION'}")
+infer_resnet.eval()
+        # 1. Clean Fixation Data (untuk ResNet)
+        infer_effnet.eval()
+            eff_logits = infer_effnet(img_tensor)
+            # Matikan GCN, kita pakai ResNet saja
+            'ResNet_Prob': res_prob,
+#  CELL 5 — BATCH INFERENCE (RESNET-ONLY DEBUG MODE)
+print("Memulai Batch Inference (ResNet-Only) untuk 21 Subjek...\n")
+print(f"{'SUBJECT ID':<18} | {'RESNET PROB (%)':<18} | {'PREDICTION'}")
+infer_resnet.eval()
+            res_logits = infer_resnet(img_tensor)
+            'ResNet_Prob': res_prob,
+    print(f"\nRINGKASAN AKHIR (RESNET-ONLY):")
+#  CELL 5 — BATCH INFERENCE (RESNET-ONLY DEBUG MODE)
+infer_resnet.eval()
+            eff_logits = infer_effnet(img_tensor)
+            'ResNet_Prob': res_prob,
+    print(f"\nRINGKASAN AKHIR (RESNET-ONLY):")
+    model = tv_models.efficientnet_b0(weights=tv_models.EfficientNet_B0_Weights.DEFAULT)
+#  CELL 6 — LEAVE-ONE-OUT CROSS-VALIDATION (RESNET18 FINE-TUNING)
+# 4. Fungsi Pembuat Model Fresh (Modifikasi untuk ResNet18)
+    # Load ResNet18 pre-trained
+    model = tv_models.resnet18(weights=tv_models.ResNet18_Weights.DEFAULT)
+print(f"{'SUBJECT DIUJI':<15} | {'TRUE LABEL':<12} | {'PREDIKSI':<12} | {'RESNET PROB'}")
+#  CELL 6 — LEAVE-ONE-OUT CROSS-VALIDATION (RESNET18 FINE-TUNING)
+# 4. Fungsi Pembuat Model Fresh (Khusus ResNet18)
+def get_fresh_resnet():
+    model = tv_models.resnet18(weights=tv_models.ResNet18_Weights.DEFAULT)
+    # Ganti layer akhir ResNet (.fc) untuk klasifikasi 2 kelas
+print(f"{'SUBJECT DIUJI':<15} | {'TRUE LABEL':<12} | {'PREDIKSI':<12} | {'RESNET PROB'}")
+    # Panggil ResNet Fresh
+    model = get_fresh_resnet()
+print(f"AKURASI LOOCV FINAL (RESNET18) : {akurasi:.1f}%")
+#  LOOCV pada subjek fokus | CNN, ResNet18, EfficientNet-B0
+    elif name == "ResNet18":
+        m = tv_models.resnet18(weights=None)
+        path = f"resnet_weights_fold_{fold}.pth"
+        m = tv_models.efficientnet_b0(weights=None)
+        path = f"effnet_weights_fold_{fold}.pth"
+MODELS = ["CNN", "ResNet18", "EfficientNet"]

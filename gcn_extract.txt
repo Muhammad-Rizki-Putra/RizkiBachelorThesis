@@ -1,0 +1,5 @@
+def get_graph_data(
+    def extract_fixations(df):
+    def knn_edges(coords, k):
+        nodes = extract_fixations(df)                    # (F, 4)
+        edge_index = knn_edges(coords, k_neighbors)
