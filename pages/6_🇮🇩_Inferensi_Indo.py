@@ -50,7 +50,9 @@ st.markdown(
 divider()
 
 # ─── Constants ──────────────────────────────────────────────
-BASE_DIR      = os.path.dirname(os.path.abspath(__file__))
+# __file__ is inside pages/, naik satu level ke root ui_model/
+PAGES_DIR     = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR      = os.path.dirname(PAGES_DIR)
 WEIGHTS_DIR   = os.path.join(BASE_DIR, "weights")
 EXCEL_PATH    = os.path.join(BASE_DIR, "pilot_study Data export_9.1.2025 (1).xlsx")
 SCREEN_W, SCREEN_H = 1680, 1050
