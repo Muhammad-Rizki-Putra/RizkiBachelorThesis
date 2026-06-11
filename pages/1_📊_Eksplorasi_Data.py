@@ -96,14 +96,14 @@ st.markdown(
 col_cat, col_sub, col_task = st.columns(3)
 
 with col_cat:
-    kategori_opsi = ["Semua Kategori", "Disleksia", "Non-Disleksia"]
+    kategori_opsi = ["Semua Kategori", "High Risk", "Low Risk"]
     selected_kategori = st.selectbox("Pilih Kategori", kategori_opsi)
 
 with col_sub:
     # Filter subjects based on category selection
-    if selected_kategori == "Disleksia":
+    if selected_kategori == "High Risk":
         filtered_subjects = labels_df[labels_df['label'] == 'dyslexic']['subject_id'].tolist()
-    elif selected_kategori == "Non-Disleksia":
+    elif selected_kategori == "Low Risk":
         filtered_subjects = labels_df[labels_df['label'] == 'non-dyslexic']['subject_id'].tolist()
     else:
         filtered_subjects = labels_df['subject_id'].tolist()

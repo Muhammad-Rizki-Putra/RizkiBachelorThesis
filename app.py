@@ -27,10 +27,10 @@ st.markdown(
             Deteksi Disleksia Menggunakan<br>Analisis Data Eye-Tracking
         </div>
         <div class="hero-subtitle">
-            Pendekatan machine learning komprehensif untuk mengklasifikasikan pembaca disleksia dan non-disleksia 
+            Pendekatan machine learning komprehensif untuk mengklasifikasikan pembaca High Risk dan Low Risk 
             melalui pola pergerakan mata yang direkam selama tugas membaca. Penelitian ini memanfaatkan metrik 
             fiksasi, saccade, dan tatapan dari eye-tracking frekuensi tinggi untuk membangun model prediktif 
-            skrining dini disleksia.
+            skrining dini risiko disleksia.
         </div>
     </div>
     """,
@@ -48,9 +48,9 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     metric_card("Total Subjek", str(n_total), "Partisipan eye-tracking", "👥")
 with col2:
-    metric_card("Non-Disleksia", str(n_non_dyslexic), "Kelompok kontrol (kelas 0)", "✅")
+    metric_card("Low Risk", str(n_non_dyslexic), "Kelompok kontrol (kelas 0)", "✅")
 with col3:
-    metric_card("Disleksia", str(n_dyslexic), "Kelompok disleksia (kelas 1)", "🔍")
+    metric_card("High Risk", str(n_dyslexic), "Kelompok risiko tinggi (kelas 1)", "🔍")
 with col4:
     metric_card("Tugas Membaca", "3", "T1 · T4 · T5", "📖")
 
@@ -66,10 +66,10 @@ with col_left:
         <div class="info-card">
             <h4>🎯 Tujuan</h4>
             <p>
-                Mengembangkan dan mengevaluasi model machine learning yang mampu mendeteksi disleksia 
+                Mengembangkan dan mengevaluasi model machine learning yang mampu mendeteksi risiko disleksia 
                 dari data eye-tracking yang direkam selama tiga tugas membaca berbeda. Studi ini 
                 menganalisis pola fiksasi, dinamika saccade, dan fitur okulomotor lainnya 
-                untuk membedakan pembaca disleksia dan non-disleksia.
+                untuk membedakan pembaca High Risk dan Low Risk.
             </p>
         </div>
         """,
@@ -81,7 +81,7 @@ with col_left:
         <div class="info-card">
             <h4>📊 Dataset</h4>
             <p>
-                Rekaman eye-tracking dari <strong>70 partisipan</strong> (35 disleksia, 35 kontrol) 
+                Rekaman eye-tracking dari <strong>70 partisipan</strong> (35 High Risk, 35 Low Risk) 
                 yang melakukan tiga tugas:<br>
                 <strong>T1 — Suku Kata:</strong> Membaca suku kata individu<br>
                 <strong>T4 — Teks Bermakna:</strong> Membaca paragraf teks bermakna<br>

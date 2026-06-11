@@ -12,7 +12,7 @@ st.markdown('<div class="hero-title">🔬 Metodologi Penelitian</div>', unsafe_a
 st.markdown(
     '<p style="color:#8892A0; font-size:1.1rem; max-width:800px;">'
     'Penelitian ini menggunakan tiga cabang pemodelan yang berbeda: Tabular, Citra (CNN), dan Graf (GCN) '
-    'untuk mendeteksi disleksia berdasarkan data pergerakan mata.'
+    'untuk mendeteksi risiko disleksia berdasarkan data pergerakan mata.'
     '</p>', 
     unsafe_allow_html=True
 )

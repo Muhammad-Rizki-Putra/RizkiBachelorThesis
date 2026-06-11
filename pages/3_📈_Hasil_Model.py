@@ -51,9 +51,9 @@ best = eval_results["Ensemble (Multimodal)"]
 with col1:
     metric_card("Akurasi", f"{best['Akurasi']*100:.1f}%", "Ketepatan keseluruhan")
 with col2:
-    metric_card("Presisi", f"{best['Presisi']*100:.1f}%", "Akurasi prediksi disleksia")
+    metric_card("Presisi", f"{best['Presisi']*100:.1f}%", "Akurasi prediksi High Risk")
 with col3:
-    metric_card("Recall", f"{best['Recall']*100:.1f}%", "Tingkat deteksi disleksia sebenarnya")
+    metric_card("Recall", f"{best['Recall']*100:.1f}%", "Tingkat deteksi High Risk sebenarnya")
 with col4:
     metric_card("F1-Score", f"{best['F1-Score']*100:.1f}%", "Rata-rata harmonik")
 

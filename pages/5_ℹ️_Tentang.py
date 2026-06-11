@@ -35,7 +35,7 @@ with col1:
     st.markdown(
         """
         Dataset ini terdiri dari rekaman eye-tracking frekuensi tinggi dari **70 subjek** 
-        (35 didiagnosis disleksia, 35 subjek kontrol).
+        (35 High Risk, 35 Low Risk).
         
         Tiga tugas membaca diberikan:
         - **Tugas 1 (Suku Kata):** Membaca suku kata terpisah.

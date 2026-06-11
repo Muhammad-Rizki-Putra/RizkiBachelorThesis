@@ -125,9 +125,9 @@ with tab1:
                 # --- RENDER RESULTS ---
                 st.markdown("<br>", unsafe_allow_html=True)
                 if pred_label == "dyslexic":
-                    st.error(f"### 🚨 Prediksi Model: DISLEKSIA")
+                    st.error(f"### 🚨 Prediksi Model: HIGH RISK")
                 else:
-                    st.success(f"### ✅ Prediksi Model: NON-DISLEKSIA")
+                    st.success(f"### ✅ Prediksi Model: LOW RISK")
                     
                 st.info(f"**Skor Kepercayaan (Confidence):** {conf:.2%}")
                 
@@ -166,9 +166,9 @@ with tab1:
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 if pred_label == "dyslexic":
-                    st.error(f"### 🚨 Prediksi Model: DISLEKSIA")
+                    st.error(f"### 🚨 Prediksi Model: HIGH RISK")
                 else:
-                    st.success(f"### ✅ Prediksi Model: NON-DISLEKSIA")
+                    st.success(f"### ✅ Prediksi Model: LOW RISK")
                 st.info(f"**Skor Kepercayaan (Confidence):** {conf:.2%}")
 
 with tab2:
@@ -181,7 +181,7 @@ with tab2:
         if st.button("Jalankan Prediksi pada Data yang Diunggah"):
             with st.spinner("Memproses file..."):
                 time.sleep(1.5)
-                st.success("### ✅ Prediksi Model: NON-DISLEKSIA")
+                st.success("### ✅ Prediksi Model: LOW RISK")
                 st.info("**Skor Kepercayaan (Confidence):** 84.3%")
 
 divider()

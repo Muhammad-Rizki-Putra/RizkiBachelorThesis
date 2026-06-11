@@ -356,7 +356,7 @@ def footer():
     st.markdown(
         """
         <div class="app-footer">
-            Deteksi Disleksia via Eye-Tracking · Penelitian Skripsi oleh Muhammad Rizki Putra · 2026
+            Deteksi Risiko Disleksia via Eye-Tracking · Penelitian Skripsi oleh Muhammad Rizki Putra · 2026
         </div>
         """,
         unsafe_allow_html=True,
